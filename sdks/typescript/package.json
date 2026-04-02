@@ -1,12 +1,17 @@
 {
   "name": "@bluebubbles/sdk",
   "version": "1.0.0",
-  "description": "OpenAPI client for @bluebubbles/sdk",
-  "author": "OpenAPI-Generator",
+  "description": "TypeScript client SDK for the BlueBubbles Server API",
+  "author": "BlueBubbles",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GIT_USER_ID/GIT_REPO_ID.git"
+    "url": "https://github.com/Jish2/bluebubbles-sdk.git",
+    "directory": "sdks/typescript"
   },
+  "bugs": {
+    "url": "https://github.com/Jish2/bluebubbles-sdk/issues"
+  },
+  "homepage": "https://github.com/Jish2/bluebubbles-sdk#readme",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "module": "./dist/esm/index.js",
