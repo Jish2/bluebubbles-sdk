@@ -5,8 +5,8 @@
 #   ./scripts/generate.sh typescript
 
 generatorName: typescript-fetch
-inputSpec: ../../openapi.yaml
-outputDir: ../../sdks/typescript
+inputSpec: openapi.yaml
+outputDir: sdks/typescript
 
 additionalProperties:
   npmName: "@bluebubbles/sdk"

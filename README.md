@@ -11,10 +11,10 @@ Each SDK in `sdks/` provides a fully-typed, idiomatic client for interacting wit
 | Language | Package | Directory | Registry |
 |---|---|---|---|
 | TypeScript (fetch) | `@bluebubbles/sdk` | [`sdks/typescript`](sdks/typescript) | npm |
-| Python | `bluebubbles-sdk` | [`sdks/python`](sdks/python) | PyPI |
-| Dart (dio) | `bluebubbles_sdk` | [`sdks/dart`](sdks/dart) | pub.dev |
-| Kotlin | `com.bluebubbles:sdk` | [`sdks/kotlin`](sdks/kotlin) | Maven Central |
-| Swift 5 | `BlueBubblesSDK` | [`sdks/swift`](sdks/swift) | SwiftPM / CocoaPods |
+| ~~Python~~ | ~~`bluebubbles-sdk`~~ | ~~[`sdks/python`](sdks/python)~~ | ~~PyPI~~ |
+| ~~Dart (dio)~~ | ~~`bluebubbles_sdk`~~ | ~~[`sdks/dart`](sdks/dart)~~ | ~~pub.dev~~ |
+| ~~Kotlin~~ | ~~`com.bluebubbles:sdk`~~ | ~~[`sdks/kotlin`](sdks/kotlin)~~ | ~~Maven Central~~ |
+| ~~Swift 5~~ | ~~`BlueBubblesSDK`~~ | ~~[`sdks/swift`](sdks/swift)~~ | ~~SwiftPM / CocoaPods~~ |
 
 Want a language that isn't listed? See [Adding a New Language](#adding-a-new-language).
 

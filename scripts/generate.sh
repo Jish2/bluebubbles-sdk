@@ -28,6 +28,7 @@ detect_runner() {
 
 run_generator() {
   local config_file="$1"
+  local lang="$2"
   local runner
   runner=$(detect_runner)
 
@@ -35,6 +36,8 @@ run_generator() {
     npx)
       npx --yes @openapitools/openapi-generator-cli generate \
         -c "$config_file" \
+        -i "$SPEC_FILE" \
+        -o "$REPO_ROOT/sdks/$lang" \
         --skip-validate-spec
       ;;
     docker)
@@ -42,11 +45,15 @@ run_generator() {
         -v "$REPO_ROOT:/workspace" \
         openapitools/openapi-generator-cli generate \
         -c "/workspace/${config_file#$REPO_ROOT/}" \
+        -i /workspace/openapi.yaml \
+        -o "/workspace/sdks/$lang" \
         --skip-validate-spec
       ;;
     global)
       openapi-generator-cli generate \
         -c "$config_file" \
+        -i "$SPEC_FILE" \
+        -o "$REPO_ROOT/sdks/$lang" \
         --skip-validate-spec
       ;;
     *)
@@ -102,7 +109,7 @@ generate_one() {
   echo "━━━ Generating: $lang ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "    config : $config_file"
 
-  run_generator "$config_file"
+  run_generator "$config_file" "$lang"
 
   echo "    done    → sdks/$lang/"
 }
