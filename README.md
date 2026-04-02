@@ -1,8 +1,8 @@
 # BlueBubbles SDK
 
-Auto-generated client SDKs for the [BlueBubbles Server API](https://bluebubbles.app), powered by [OpenAPI Generator](https://openapi-generator.tech).
+The official home of client SDKs for the [BlueBubbles Server API](https://bluebubbles.app).
 
-The single source of truth is `openapi.yaml`, generated from the [official BlueBubbles Postman collection](https://documenter.getpostman.com/view/765844/UV5RnfwM). Every SDK in `sdks/` is generated from it — no hand-written client code.
+Each SDK in `sdks/` provides a fully-typed, idiomatic client for interacting with a BlueBubbles server from your language of choice. The `openapi.yaml` spec (derived from the [official BlueBubbles Postman collection](https://documenter.getpostman.com/view/765844/UV5RnfwM)) serves as the source of truth and drives SDK generation via [OpenAPI Generator](https://openapi-generator.tech).
 
 ---
 
@@ -56,7 +56,7 @@ bluebubbles-sdk/
 ├── openapi.yaml              # BlueBubbles OpenAPI 3.0 spec (source of truth)
 ├── openapitools.json         # Pins the openapi-generator-cli version
 ├── scripts/
-│   └── generate.sh           # Generate one or all SDKs
+│   └── generate.sh           # Regenerate one or all SDKs from the spec
 ├── config/
 │   └── languages/
 │       ├── typescript.yaml   # Generator config for TypeScript
@@ -65,11 +65,11 @@ bluebubbles-sdk/
 │       ├── kotlin.yaml       # Generator config for Kotlin
 │       └── swift.yaml        # Generator config for Swift 5
 ├── sdks/
-│   ├── typescript/           # Generated TypeScript SDK (auto-generated, do not edit)
-│   ├── python/               # Generated Python SDK     (auto-generated, do not edit)
-│   ├── dart/                 # Generated Dart SDK       (auto-generated, do not edit)
-│   ├── kotlin/               # Generated Kotlin SDK     (auto-generated, do not edit)
-│   └── swift/                # Generated Swift SDK      (auto-generated, do not edit)
+│   ├── typescript/           # TypeScript SDK
+│   ├── python/               # Python SDK
+│   ├── dart/                 # Dart SDK
+│   ├── kotlin/               # Kotlin SDK
+│   └── swift/                # Swift SDK
 ├── docs/
 │   └── adding-a-language.md  # How to add a new language
 └── .github/
@@ -78,7 +78,7 @@ bluebubbles-sdk/
         └── validate.yml      # Validate the OpenAPI spec on every PR
 ```
 
-> **Note:** Everything inside `sdks/` is auto-generated. Do not edit those files directly — your changes will be overwritten on the next generation run. To fix an SDK issue, update `openapi.yaml` or the language config in `config/languages/`.
+> **Note:** The SDKs in `sdks/` are generated from `openapi.yaml`. To fix an SDK issue, update `openapi.yaml` or the language config in `config/languages/`, then run `./scripts/generate.sh`.
 
 ---
 
