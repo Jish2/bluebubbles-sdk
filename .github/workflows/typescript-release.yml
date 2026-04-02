@@ -12,7 +12,7 @@ on:
 
 jobs:
   release:
-    name: Build & publish @bluebubbles/sdk
+    name: Build & publish @jgoon/bluebubbles
     runs-on: ubuntu-latest
 
     steps:

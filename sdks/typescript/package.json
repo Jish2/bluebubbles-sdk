@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BlueBubblesApp/bluebubbles-sdk.git",
+    "url": "https://github.com/Jish2/bluebubbles-sdk.git",
     "directory": "sdks/typescript"
   },
   "license": "MIT",

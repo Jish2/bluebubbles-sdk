@@ -8,54 +8,17 @@ Each SDK in `sdks/` provides a fully-typed, idiomatic client for interacting wit
 
 ## Supported Languages
 
-| Language | Package | Directory | Status |
-|---|---|---|---|
-| TypeScript | [`@bluebubbles/sdk`](https://www.npmjs.com/package/@bluebubbles/sdk) | [`sdks/typescript`](sdks/typescript) | Active |
+| Language   | Package                                                              | Directory                            | Status |
+| ---------- | -------------------------------------------------------------------- | ------------------------------------ | ------ |
+| TypeScript | [`@jgoon/bluebubbles`](https://www.npmjs.com/package/@jgoon/bluebubbles) | [`sdks/typescript`](sdks/typescript/README.md) | Active |
 
 ---
 
-## TypeScript SDK
+## SDK Documentation
 
-A type-safe client powered by [openapi-typescript](https://openapi-ts.dev) + [openapi-fetch](https://openapi-ts.dev/openapi-fetch). Zero manual typing — types are generated directly from the OpenAPI spec.
+Language-specific usage and API docs live with each SDK:
 
-### Install
-
-```bash
-npm install @bluebubbles/sdk
-```
-
-### Usage
-
-```ts
-import { createClient } from "@bluebubbles/sdk";
-
-const client = createClient({ baseUrl: "http://localhost:1234" });
-
-// Every path, parameter, and response is fully typed
-const { data, error } = await client.GET("/api/v1/server/info", {
-  params: { query: { password: "your-password" } },
-});
-
-// Send a message
-await client.POST("/api/v1/message/text", {
-  params: { query: { password: "your-password" } },
-  body: {
-    chatGuid: "iMessage;-;+11234567890",
-    message: "Hello from the SDK!",
-  },
-});
-```
-
-### Type-only import
-
-If you prefer to use `openapi-fetch` directly (or another HTTP client), you can import just the types:
-
-```ts
-import createClient from "openapi-fetch";
-import type { paths } from "@bluebubbles/sdk";
-
-const client = createClient<paths>({ baseUrl: "http://localhost:1234" });
-```
+- TypeScript: [`sdks/typescript/README.md`](sdks/typescript/README.md)
 
 ---
 

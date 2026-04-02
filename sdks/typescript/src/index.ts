@@ -10,7 +10,7 @@ export type { ClientOptions, Middleware, MaybeOptionalInit } from "openapi-fetch
  *
  * @example
  * ```ts
- * import { createClient } from "@bluebubbles/sdk";
+ * import { createClient } from "@jgoon/bluebubbles";
  *
  * const client = createClient({ baseUrl: "http://localhost:1234" });
  *
