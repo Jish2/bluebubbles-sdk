@@ -2,50 +2,60 @@
 
 The official home of client SDKs for the [BlueBubbles Server API](https://bluebubbles.app).
 
-Each SDK in `sdks/` provides a fully-typed, idiomatic client for interacting with a BlueBubbles server from your language of choice. The `openapi.yaml` spec (derived from the [official BlueBubbles Postman collection](https://documenter.getpostman.com/view/765844/UV5RnfwM)) serves as the source of truth and drives SDK generation via [OpenAPI Generator](https://openapi-generator.tech).
+Each SDK in `sdks/` provides a fully-typed, idiomatic client for interacting with a BlueBubbles server. The `openapi.yaml` spec (derived from the [official BlueBubbles Postman collection](https://documenter.getpostman.com/view/765844/UV5RnfwM)) serves as the source of truth, and each language uses the best available generation tool for that ecosystem.
 
 ---
 
 ## Supported Languages
 
-| Language | Package | Directory | Registry |
+| Language | Package | Directory | Status |
 |---|---|---|---|
-| TypeScript (fetch) | `@bluebubbles/sdk` | [`sdks/typescript`](sdks/typescript) | npm |
-| ~~Python~~ | ~~`bluebubbles-sdk`~~ | ~~[`sdks/python`](sdks/python)~~ | ~~PyPI~~ |
-| ~~Dart (dio)~~ | ~~`bluebubbles_sdk`~~ | ~~[`sdks/dart`](sdks/dart)~~ | ~~pub.dev~~ |
-| ~~Kotlin~~ | ~~`com.bluebubbles:sdk`~~ | ~~[`sdks/kotlin`](sdks/kotlin)~~ | ~~Maven Central~~ |
-| ~~Swift 5~~ | ~~`BlueBubblesSDK`~~ | ~~[`sdks/swift`](sdks/swift)~~ | ~~SwiftPM / CocoaPods~~ |
-
-Want a language that isn't listed? See [Adding a New Language](#adding-a-new-language).
+| TypeScript | [`@bluebubbles/sdk`](https://www.npmjs.com/package/@bluebubbles/sdk) | [`sdks/typescript`](sdks/typescript) | Active |
 
 ---
 
-## Quick Start
+## TypeScript SDK
 
-### Prerequisites
+A type-safe client powered by [openapi-typescript](https://openapi-ts.dev) + [openapi-fetch](https://openapi-ts.dev/openapi-fetch). Zero manual typing — types are generated directly from the OpenAPI spec.
 
-One of:
-- **Node.js 16+** — uses `npx @openapitools/openapi-generator-cli` (recommended, no Java required)
-- **Docker** — uses the official generator image
-- **Java 11+** — uses the generator JAR directly
-
-### Generate All SDKs
+### Install
 
 ```bash
-./scripts/generate.sh
+npm install @bluebubbles/sdk
 ```
 
-### Generate a Specific Language
+### Usage
 
-```bash
-./scripts/generate.sh typescript
-./scripts/generate.sh python
-./scripts/generate.sh dart
-./scripts/generate.sh kotlin
-./scripts/generate.sh swift
+```ts
+import { createClient } from "@bluebubbles/sdk";
+
+const client = createClient({ baseUrl: "http://localhost:1234" });
+
+// Every path, parameter, and response is fully typed
+const { data, error } = await client.GET("/api/v1/server/info", {
+  params: { query: { password: "your-password" } },
+});
+
+// Send a message
+await client.POST("/api/v1/message/text", {
+  params: { query: { password: "your-password" } },
+  body: {
+    chatGuid: "iMessage;-;+11234567890",
+    message: "Hello from the SDK!",
+  },
+});
 ```
 
-The generator name matches the filename under `config/languages/` (without `.yaml`).
+### Type-only import
+
+If you prefer to use `openapi-fetch` directly (or another HTTP client), you can import just the types:
+
+```ts
+import createClient from "openapi-fetch";
+import type { paths } from "@bluebubbles/sdk";
+
+const client = createClient<paths>({ baseUrl: "http://localhost:1234" });
+```
 
 ---
 
@@ -54,42 +64,28 @@ The generator name matches the filename under `config/languages/` (without `.yam
 ```
 bluebubbles-sdk/
 ├── openapi.yaml              # BlueBubbles OpenAPI 3.0 spec (source of truth)
-├── openapitools.json         # Pins the openapi-generator-cli version
 ├── scripts/
 │   └── generate.sh           # Regenerate one or all SDKs from the spec
-├── config/
-│   └── languages/
-│       ├── typescript.yaml   # Generator config for TypeScript
-│       ├── python.yaml       # Generator config for Python
-│       ├── dart.yaml         # Generator config for Dart
-│       ├── kotlin.yaml       # Generator config for Kotlin
-│       └── swift.yaml        # Generator config for Swift 5
-├── sdks/
-│   ├── typescript/           # TypeScript SDK
-│   ├── python/               # Python SDK
-│   ├── dart/                 # Dart SDK
-│   ├── kotlin/               # Kotlin SDK
-│   └── swift/                # Swift SDK
-├── docs/
-│   └── adding-a-language.md  # How to add a new language
-└── .github/
-    └── workflows/
-        ├── generate.yml      # Regenerate SDKs when openapi.yaml changes
-        └── validate.yml      # Validate the OpenAPI spec on every PR
+└── sdks/
+    └── typescript/            # TypeScript SDK (openapi-typescript + openapi-fetch)
+        ├── package.json
+        ├── tsconfig.json
+        └── src/
+            ├── index.ts       # Client factory + type re-exports
+            └── schema.d.ts    # Generated types from openapi.yaml
 ```
-
-> **Note:** The SDKs in `sdks/` are generated from `openapi.yaml`. To fix an SDK issue, update `openapi.yaml` or the language config in `config/languages/`, then run `./scripts/generate.sh`.
 
 ---
 
-## Adding a New Language
+## Regenerating
 
-1. Pick a generator name from the [full generators list](https://openapi-generator.tech/docs/generators).
-2. Create a config file at `config/languages/<name>.yaml` (copy an existing one as a template).
-3. Run `./scripts/generate.sh <name>` to test locally.
-4. Open a PR — the CI will validate and regenerate the SDK automatically.
+```bash
+# All SDKs
+./scripts/generate.sh
 
-See [docs/adding-a-language.md](docs/adding-a-language.md) for a detailed walkthrough.
+# TypeScript only
+./scripts/generate.sh typescript
+```
 
 ---
 
@@ -97,25 +93,9 @@ See [docs/adding-a-language.md](docs/adding-a-language.md) for a detailed walkth
 
 The spec lives in `openapi.yaml` and was originally generated from the [BlueBubbles Postman collection](https://documenter.getpostman.com/view/765844/UV5RnfwM). If the BlueBubbles Server API changes:
 
-1. Export the updated Postman collection and re-convert it to OpenAPI 3, **or** edit `openapi.yaml` directly.
+1. Edit `openapi.yaml`.
 2. Run `./scripts/generate.sh` to regenerate all SDKs.
-3. Commit both `openapi.yaml` and the updated `sdks/` directories.
-4. Bump the version in `openapitools.json` if you want to pick up a newer generator.
-
----
-
-## Development
-
-```bash
-# Install the CLI tool globally (optional, script uses npx by default)
-npm install -g @openapitools/openapi-generator-cli
-
-# List all available generators
-npx @openapitools/openapi-generator-cli list
-
-# Validate the spec
-npx @openapitools/openapi-generator-cli validate -i openapi.yaml
-```
+3. Commit `openapi.yaml` and the updated `sdks/` directories.
 
 ---
 

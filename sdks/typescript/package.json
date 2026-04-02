@@ -1,26 +1,44 @@
 {
-  "name": "@bluebubbles/sdk",
+  "name": "@jgoon/bluebubbles",
   "version": "1.0.0",
-  "description": "TypeScript client SDK for the BlueBubbles Server API",
-  "author": "BlueBubbles",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Jish2/bluebubbles-sdk.git",
-    "directory": "sdks/typescript"
-  },
-  "bugs": {
-    "url": "https://github.com/Jish2/bluebubbles-sdk/issues"
-  },
-  "homepage": "https://github.com/Jish2/bluebubbles-sdk#readme",
+  "description": "Type-safe TypeScript client for the BlueBubbles Server API",
+  "type": "module",
   "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "module": "./dist/esm/index.js",
-  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./schema": {
+      "types": "./src/schema.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src/schema.d.ts"
+  ],
   "scripts": {
-    "build": "tsc && tsc -p tsconfig.esm.json",
-    "prepare": "npm run build"
+    "generate": "openapi-typescript ../../openapi.yaml -o src/schema.d.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.17.0"
   },
   "devDependencies": {
-    "typescript": "^4.0"
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^5.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlueBubblesApp/bluebubbles-sdk.git",
+    "directory": "sdks/typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

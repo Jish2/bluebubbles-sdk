@@ -1,0 +1,33 @@
+name: Validate & Build
+
+on:
+  pull_request:
+    paths:
+      - "openapi.yaml"
+      - "sdks/typescript/**"
+
+jobs:
+  validate:
+    name: Validate spec & build TypeScript SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: sdks/typescript
+        run: npm ci
+
+      - name: Generate types from spec
+        working-directory: sdks/typescript
+        run: npm run generate
+
+      - name: Build
+        working-directory: sdks/typescript
+        run: npm run build

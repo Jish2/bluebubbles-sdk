@@ -17,27 +17,13 @@ Thank you for contributing! This document covers the most common contribution wo
 
 ## Adding a New Language
 
-The fastest way to add a language is:
+Each language SDK lives in `sdks/<language>/` and uses the best generation tool for that ecosystem. There is no requirement to use the same generator across languages.
 
-```bash
-# 1. Pick a generator name from https://openapi-generator.tech/docs/generators
-# 2. Create a config file
-cp config/languages/typescript.yaml config/languages/<your-language>.yaml
-
-# 3. Edit the new file — at minimum update:
-#    - generatorName
-#    - outputDir
-#    - additionalProperties (package name, author, etc.)
-
-# 4. Generate and inspect
-./scripts/generate.sh <your-language>
-
-# 5. Commit everything
-git add config/languages/<your-language>.yaml sdks/<your-language>/
-git commit -m "feat: add <your-language> SDK"
-```
-
-See [docs/adding-a-language.md](docs/adding-a-language.md) for a full walkthrough with examples.
+1. Create the SDK directory: `sdks/<your-language>/`
+2. Set up the generation tooling (e.g. install a code generator, write a config).
+3. Add a `generate_<language>` function to `scripts/generate.sh` and add the language to `ALL_LANGUAGES`.
+4. Run `./scripts/generate.sh <your-language>` to test locally.
+5. Open a PR.
 
 ---
 
@@ -46,11 +32,10 @@ See [docs/adding-a-language.md](docs/adding-a-language.md) for a full walkthroug
 `openapi.yaml` is the source of truth. All SDKs are generated from it.
 
 1. Edit `openapi.yaml`.
-2. Validate: `npx @openapitools/openapi-generator-cli validate -i openapi.yaml`
-3. Regenerate: `./scripts/generate.sh`
-4. Commit `openapi.yaml` and all changed `sdks/` directories together.
+2. Regenerate: `./scripts/generate.sh`
+3. Commit `openapi.yaml` and all changed `sdks/` directories together.
 
-> Do **not** edit files inside `sdks/` directly. They are overwritten on every generation run.
+> Do **not** edit generated files inside `sdks/` directly (e.g. `schema.d.ts`). They are overwritten on every generation run.
 
 ---
 
@@ -58,7 +43,7 @@ See [docs/adding-a-language.md](docs/adding-a-language.md) for a full walkthroug
 
 - **One concern per PR.** Keep spec changes, new languages, and tooling changes in separate PRs.
 - **Regenerate before opening a PR.** Run `./scripts/generate.sh` so the SDKs in the PR are up to date.
-- **Don't edit generated files.** If an SDK looks wrong, fix the spec or the language config.
+- **Don't edit generated files.** If an SDK looks wrong, fix the spec or the generation config.
 - **Describe your change.** Explain what you changed and why in the PR description.
 
 ---
@@ -67,10 +52,7 @@ See [docs/adding-a-language.md](docs/adding-a-language.md) for a full walkthroug
 
 ### Requirements
 
-One of:
-- Node.js 16+ (preferred — `npx` handles the generator automatically)
-- Docker
-- Java 11+
+- Node.js 18+ (for the TypeScript SDK)
 
 ### Generate all SDKs locally
 
@@ -78,22 +60,10 @@ One of:
 ./scripts/generate.sh
 ```
 
-### Validate the spec
+### Generate a single language
 
 ```bash
-npx @openapitools/openapi-generator-cli validate -i openapi.yaml
-```
-
-### List all available generators
-
-```bash
-npx @openapitools/openapi-generator-cli list
-```
-
-### Show all config options for a generator
-
-```bash
-npx @openapitools/openapi-generator-cli config-help -g typescript-fetch
+./scripts/generate.sh typescript
 ```
 
 ---

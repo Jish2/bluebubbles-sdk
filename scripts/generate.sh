@@ -9,136 +9,67 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG_DIR="$REPO_ROOT/config/languages"
 SPEC_FILE="$REPO_ROOT/openapi.yaml"
 
-# ─── Detect generator runtime ────────────────────────────────────────────────
+# ─── Language-specific generators ─────────────────────────────────────────────
+# Each language has its own generate function using the best tool for that
+# language. Add a new function + entry in ALL_LANGUAGES to support a new lang.
 
-detect_runner() {
-  if command -v npx &>/dev/null; then
-    echo "npx"
-  elif command -v docker &>/dev/null; then
-    echo "docker"
-  elif command -v openapi-generator-cli &>/dev/null; then
-    echo "global"
-  else
-    echo ""
-  fi
+generate_typescript() {
+  echo "━━━ Generating: typescript ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "    tool: openapi-typescript"
+
+  cd "$REPO_ROOT/sdks/typescript"
+  npm run generate
+  echo "    done → sdks/typescript/"
 }
 
-run_generator() {
-  local config_file="$1"
-  local lang="$2"
-  local runner
-  runner=$(detect_runner)
+# Placeholder generators for future languages — uncomment and implement when ready.
+#
+# generate_python() {
+#   echo "━━━ Generating: python ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+#   cd "$REPO_ROOT/sdks/python"
+#   # e.g. openapi-python-client generate --path "$SPEC_FILE"
+#   echo "    done → sdks/python/"
+# }
+#
+# generate_dart() {
+#   echo "━━━ Generating: dart ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+#   cd "$REPO_ROOT/sdks/dart"
+#   echo "    done → sdks/dart/"
+# }
 
-  case "$runner" in
-    npx)
-      npx --yes @openapitools/openapi-generator-cli generate \
-        -c "$config_file" \
-        -i "$SPEC_FILE" \
-        -o "$REPO_ROOT/sdks/$lang" \
-        --skip-validate-spec
-      ;;
-    docker)
-      docker run --rm \
-        -v "$REPO_ROOT:/workspace" \
-        openapitools/openapi-generator-cli generate \
-        -c "/workspace/${config_file#$REPO_ROOT/}" \
-        -i /workspace/openapi.yaml \
-        -o "/workspace/sdks/$lang" \
-        --skip-validate-spec
-      ;;
-    global)
-      openapi-generator-cli generate \
-        -c "$config_file" \
-        -i "$SPEC_FILE" \
-        -o "$REPO_ROOT/sdks/$lang" \
-        --skip-validate-spec
-      ;;
-    *)
-      echo "ERROR: No generator runtime found."
-      echo "Install one of:"
-      echo "  - Node.js (https://nodejs.org) — recommended, uses npx automatically"
-      echo "  - Docker  (https://docker.com)"
-      echo "  - openapi-generator-cli globally: npm i -g @openapitools/openapi-generator-cli"
-      exit 1
-      ;;
-  esac
-}
+ALL_LANGUAGES=(typescript)
 
-# ─── Validate spec ────────────────────────────────────────────────────────────
-
-validate_spec() {
-  echo "Validating $SPEC_FILE ..."
-  local runner
-  runner=$(detect_runner)
-  case "$runner" in
-    npx)
-      npx --yes @openapitools/openapi-generator-cli validate -i "$SPEC_FILE" || true
-      ;;
-    docker)
-      docker run --rm \
-        -v "$REPO_ROOT:/workspace" \
-        openapitools/openapi-generator-cli validate -i /workspace/openapi.yaml || true
-      ;;
-    global)
-      openapi-generator-cli validate -i "$SPEC_FILE" || true
-      ;;
-  esac
-}
-
-# ─── Generate one language ────────────────────────────────────────────────────
+# ─── Dispatch ─────────────────────────────────────────────────────────────────
 
 generate_one() {
   local lang="$1"
-  local config_file="$CONFIG_DIR/${lang}.yaml"
 
-  if [[ ! -f "$config_file" ]]; then
-    echo "ERROR: No config found for language '$lang'."
-    echo "Expected: $config_file"
+  if ! declare -f "generate_${lang}" &>/dev/null; then
+    echo "ERROR: No generator found for language '$lang'."
     echo ""
     echo "Available languages:"
-    for f in "$CONFIG_DIR"/*.yaml; do
-      echo "  $(basename "$f" .yaml)"
+    for l in "${ALL_LANGUAGES[@]}"; do
+      echo "  $l"
     done
     exit 1
   fi
 
-  echo ""
-  echo "━━━ Generating: $lang ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "    config : $config_file"
-
-  run_generator "$config_file" "$lang"
-
-  echo "    done    → sdks/$lang/"
+  "generate_${lang}"
 }
 
-# ─── Generate all languages ───────────────────────────────────────────────────
-
 generate_all() {
-  local langs=()
-  for f in "$CONFIG_DIR"/*.yaml; do
-    langs+=("$(basename "$f" .yaml)")
-  done
-
-  if [[ ${#langs[@]} -eq 0 ]]; then
-    echo "No language configs found in $CONFIG_DIR"
-    exit 1
-  fi
-
-  echo "Generating SDKs for: ${langs[*]}"
-
-  for lang in "${langs[@]}"; do
+  echo "Generating SDKs for: ${ALL_LANGUAGES[*]}"
+  for lang in "${ALL_LANGUAGES[@]}"; do
+    echo ""
     generate_one "$lang"
   done
 }
 
-# ─── Entry point ─────────────────────────────────────────────────────────────
+# ─── Entry point ──────────────────────────────────────────────────────────────
 
 cd "$REPO_ROOT"
-
-validate_spec
 
 if [[ $# -eq 0 ]]; then
   generate_all

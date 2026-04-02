@@ -5,8 +5,7 @@ on:
     branches: [main]
     paths:
       - "openapi.yaml"
-      - "config/languages/**"
-      - "openapitools.json"
+      - "scripts/generate.sh"
   workflow_dispatch:
     inputs:
       language:
@@ -29,6 +28,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Install TypeScript SDK dependencies
+        working-directory: sdks/typescript
+        run: npm ci
 
       - name: Generate SDKs
         run: |
