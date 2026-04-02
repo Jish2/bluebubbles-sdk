@@ -1,0 +1,24 @@
+# Node / openapi-generator-cli
+node_modules/
+.openapi-generator-ignore
+
+# Generated SDK artifacts that should NOT be committed
+# (comment out the lines below if you want to commit generated SDKs)
+# sdks/typescript/node_modules/
+# sdks/python/*.egg-info/
+# sdks/python/dist/
+# sdks/python/build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*

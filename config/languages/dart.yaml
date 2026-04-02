@@ -1,0 +1,17 @@
+# OpenAPI Generator configuration for Dart (dio HTTP client)
+# Generator docs: https://openapi-generator.tech/docs/generators/dart-dio
+#
+# To regenerate:
+#   ./scripts/generate.sh dart
+
+generatorName: dart-dio
+inputSpec: ../../openapi.yaml
+outputDir: ../../sdks/dart
+
+additionalProperties:
+  pubName: bluebubbles_sdk
+  pubVersion: "1.0.0"
+  pubDescription: "BlueBubbles Server API client for Dart/Flutter"
+  pubHomepage: "https://github.com/BlueBubblesApp/bluebubbles-sdk"
+  nullSafe: true
+  dateLibrary: core

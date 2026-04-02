@@ -1,0 +1,20 @@
+# OpenAPI Generator configuration for TypeScript (fetch)
+# Generator docs: https://openapi-generator.tech/docs/generators/typescript-fetch
+#
+# To regenerate:
+#   ./scripts/generate.sh typescript
+
+generatorName: typescript-fetch
+inputSpec: ../../openapi.yaml
+outputDir: ../../sdks/typescript
+
+additionalProperties:
+  npmName: "@bluebubbles/sdk"
+  npmVersion: "1.0.0"
+  supportsES6: true
+  typescriptThreePlus: true
+  withInterfaces: true
+  useSingleRequestParameter: true
+
+# Files to skip overwriting after first generation (put customizations here)
+# .openapi-generator-ignore controls this at the output directory level

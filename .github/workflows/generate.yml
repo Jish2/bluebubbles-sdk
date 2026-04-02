@@ -1,0 +1,53 @@
+name: Generate SDKs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "openapi.yaml"
+      - "config/languages/**"
+      - "openapitools.json"
+  workflow_dispatch:
+    inputs:
+      language:
+        description: "Language to regenerate (leave empty for all)"
+        required: false
+        default: ""
+
+jobs:
+  generate:
+    name: Generate SDKs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate SDKs
+        run: |
+          if [ -n "${{ github.event.inputs.language }}" ]; then
+            ./scripts/generate.sh "${{ github.event.inputs.language }}"
+          else
+            ./scripts/generate.sh
+          fi
+
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet sdks/ || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit regenerated SDKs
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sdks/
+          git commit -m "chore: regenerate SDKs from openapi.yaml [skip ci]"
+          git push

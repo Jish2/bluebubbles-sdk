@@ -1,0 +1,16 @@
+# OpenAPI Generator configuration for Python
+# Generator docs: https://openapi-generator.tech/docs/generators/python
+#
+# To regenerate:
+#   ./scripts/generate.sh python
+
+generatorName: python
+inputSpec: ../../openapi.yaml
+outputDir: ../../sdks/python
+
+additionalProperties:
+  packageName: bluebubbles_sdk
+  projectName: bluebubbles-sdk
+  packageVersion: "1.0.0"
+  packageUrl: "https://github.com/BlueBubblesApp/bluebubbles-sdk"
+  pythonAttrNoneIfUnset: true
