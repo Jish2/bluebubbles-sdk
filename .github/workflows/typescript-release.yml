@@ -40,7 +40,12 @@ jobs:
       - name: Stamp version into package.json
         working-directory: sdks/typescript
         run: |
-          npm version "${{ steps.version.outputs.version }}" --no-git-tag-version
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '${{ steps.version.outputs.version }}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
 
       - name: Install dependencies
         working-directory: sdks/typescript
