@@ -30,6 +30,40 @@ await client.POST("/api/v1/message/text", {
 });
 ```
 
+## Webhooks
+
+Types and runtime guards for BlueBubbles webhook payloads are included. Import from the main entry or the `/webhooks` subpath:
+
+```ts
+import {
+  BlueBubblesWebhookPayload,
+  isBlueBubblesWebhookPayload,
+} from "@jgoon/bluebubbles";
+
+// or, for a targeted import:
+import {
+  BlueBubblesWebhookPayload,
+  isBlueBubblesWebhookPayload,
+} from "@jgoon/bluebubbles/webhooks";
+```
+
+The payload is a discriminated union — switch on `payload.type` and TypeScript narrows `payload.data` automatically:
+
+```ts
+function handleWebhook(raw: unknown) {
+  if (!isBlueBubblesWebhookPayload(raw)) return;
+
+  switch (raw.type) {
+    case "new-message":
+      console.log(raw.data.guid, raw.data.text);
+      break;
+    case "typing-indicator":
+      console.log(raw.data.guid, raw.data.display);
+      break;
+  }
+}
+```
+
 ## Type-only import
 
 If you prefer to use `openapi-fetch` directly (or another HTTP client), you can import just the generated types:

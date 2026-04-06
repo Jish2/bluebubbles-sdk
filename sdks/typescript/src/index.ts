@@ -4,6 +4,7 @@ import type { paths } from "./schema.js";
 
 export type { paths, components, operations } from "./schema.js";
 export type { ClientOptions, Middleware, MaybeOptionalInit } from "openapi-fetch";
+export * from "./webhooks/index.js";
 
 /**
  * Create a type-safe BlueBubbles API client.
