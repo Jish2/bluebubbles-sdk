@@ -59,6 +59,10 @@ jobs:
         working-directory: sdks/typescript
         run: npm run build
 
+      - name: Check published types
+        working-directory: sdks/typescript
+        run: npm run check:package
+
       - name: Publish to npm
         working-directory: sdks/typescript
         env:

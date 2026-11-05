@@ -35,7 +35,7 @@ Each language SDK lives in `sdks/<language>/` and uses the best generation tool 
 2. Regenerate: `./scripts/generate.sh`
 3. Commit `openapi.yaml` and all changed `sdks/` directories together.
 
-> Do **not** edit generated files inside `sdks/` directly (e.g. `schema.d.ts`). They are overwritten on every generation run.
+> Do **not** edit generated files inside `sdks/` directly (e.g. `schema.ts`). They are overwritten on every generation run.
 
 ---
 
